@@ -3,11 +3,11 @@ namespace AllSeriesApi.DTOS.Series;
 
 public class SeriesCreateRequest
 {
-        [Required]
+    [Required]
     [MinLength(3)]
     public string Name { get; set; } = string.Empty;
     [Required]
-    [Range(0, 10)]
+    [Range(1, 10)]
     public int Rating { get; set; }
     [Required]
     [Range(0, int.MaxValue)]

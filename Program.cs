@@ -2,6 +2,7 @@ using Scalar.AspNetCore;
 using AllSeriesApi.Models;
 using AllSeriesApi.Data;
 using Microsoft.EntityFrameworkCore;
+using AllSeriesApi.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +16,8 @@ builder.Services.AddDbContext<SeriesDbContext>(x =>
         ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))
     )
 );
+
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
 var app = builder.Build();
 
