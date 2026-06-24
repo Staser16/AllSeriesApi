@@ -1,6 +1,6 @@
 @AllSeriesApi_HostAddress = http://localhost:5269
 
-GET {{AllSeriesApi_HostAddress}}/weatherforecast/
+GET {{AllSeriesApi_HostAddress}}/Series/
 Accept: application/json
 
 ###
