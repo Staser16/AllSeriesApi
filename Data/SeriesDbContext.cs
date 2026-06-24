@@ -5,68 +5,68 @@ namespace AllSeriesApi.Data;
 
 public class SeriesDbContext(DbContextOptions<SeriesDbContext> options) : DbContext(options)
 {
-    public DbSet<Series> Series { get; set; }
-    public DbSet<Anime> Animes { get; set; }
-    public DbSet<Film> Films { get; set; }
+    public DbSet<SeriesModel> Series { get; set; }
+    public DbSet<AnimeModel> Animes { get; set; }
+    public DbSet<FilmModel> Films { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder
-        .Entity<Series>()
+        .Entity<SeriesModel>()
         .Property(x => x.Name)
         .HasMaxLength(100)
         .IsRequired();
 
         modelBuilder
-        .Entity<Series>()
+        .Entity<SeriesModel>()
         .Property(x => x.Rating)
         .IsRequired();
 
         modelBuilder
-        .Entity<Series>()
+        .Entity<SeriesModel>()
         .Property(x => x.Episodes)
         .IsRequired();
 
         modelBuilder
-        .Entity<Series>()
+        .Entity<SeriesModel>()
         .Property(x => x.Seasons)
         .IsRequired();
 
         modelBuilder
-        .Entity<Film>()
+        .Entity<FilmModel>()
         .Property(x => x.Name)
         .HasMaxLength(100)
         .IsRequired();
 
         modelBuilder
-        .Entity<Film>()
+        .Entity<FilmModel>()
         .Property(x => x.Rating)
         .IsRequired();
 
         modelBuilder
-        .Entity<Film>()
+        .Entity<FilmModel>()
         .Property(x => x.NumberOfMovies)
         .IsRequired();
     
         
         modelBuilder
-        .Entity<Anime>()
+        .Entity<AnimeModel>()
         .Property(x => x.Name)
         .HasMaxLength(100)
         .IsRequired();
 
         modelBuilder
-        .Entity<Anime>()
+        .Entity<AnimeModel>()
         .Property(x => x.Rating)
         .IsRequired();
 
         modelBuilder
-        .Entity<Anime>()
+        .Entity<AnimeModel>()
         .Property(x => x.Episodes)
         .IsRequired();
 
         modelBuilder
-        .Entity<Anime>()
+        .Entity<AnimeModel>()
         .Property(x => x.Seasons)
         .IsRequired();
     }

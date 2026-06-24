@@ -1,6 +1,6 @@
 namespace AllSeriesApi.Models;
 
-public class Film
+public class FilmModel
 {
     public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;

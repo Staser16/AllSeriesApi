@@ -22,7 +22,7 @@ public class GenericRepository<TEntity>(SeriesDbContext context) : IGenericRepos
         return await context.Set<TEntity>().ToListAsync();
     }
 
-    public async Task<TEntity?> GetByIdAsync(int Id)
+    public async Task<TEntity?> GetByIdAsync(Guid Id)
     {
         return await context.Set<TEntity>().FindAsync(Id);
     }

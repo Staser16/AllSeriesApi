@@ -1,6 +1,6 @@
 namespace AllSeriesApi.Models;
 
-public class Anime
+public class SeriesModel
 {
     public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;
@@ -9,5 +9,4 @@ public class Anime
     public int Seasons { get; set; }
     public DateTime CreationDateTime { get; set; } = DateTime.UtcNow;
     public DateTime UpdateDateTime { get; set; }
-
 }
