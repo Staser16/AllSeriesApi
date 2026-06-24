@@ -1,31 +1,34 @@
 using System.Formats.Tar;
+using AllSeriesApi.Data;
+using AllSeriesApi.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace AllSeriesApi.Repository;
 
-public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : class
+public class GenericRepository<TEntity>(SeriesDbContext context) : IGenericRepository<TEntity> where TEntity : class
 {
-    public Task AddAsync(TEntity entity)
+    public async Task AddAsync(TEntity entity)
     {
-        throw new NotImplementedException();
+        context.Set<TEntity>().Add(entity);
     }
 
-    public Task DeleteAsync(TEntity entity)
+    public async Task DeleteAsync(TEntity entity)
     {
-        throw new NotImplementedException();
+        context.Set<TEntity>().Remove(entity);
     }
 
-    public Task<List<TEntity>> GetAllAsync()
+    public async Task<List<TEntity>> GetAllAsync()
     {
-        throw new NotImplementedException();
+        return await context.Set<TEntity>().ToListAsync();
     }
 
-    public Task<TEntity> GetByIdAsync(int Id)
+    public async Task<TEntity?> GetByIdAsync(int Id)
     {
-        throw new NotImplementedException();
+        return await context.Set<TEntity>().FindAsync(Id);
     }
 
-    public Task SaveAsync()
+    public async Task SaveAsync()
     {
-        throw new NotImplementedException();
+        await context.SaveChangesAsync();
     }
 }
