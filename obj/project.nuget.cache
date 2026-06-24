@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "JB0p/+L58x0=",
+  "success": true,
+  "projectFilePath": "/home/staser/programowanie/AllSeriesApi/AllSeriesApi.csproj",
+  "expectedPackageFiles": [
+    "/home/staser/.nuget/packages/microsoft.aspnetcore.openapi/10.0.9/microsoft.aspnetcore.openapi.10.0.9.nupkg.sha512",
+    "/home/staser/.nuget/packages/microsoft.openapi/2.0.0/microsoft.openapi.2.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}
