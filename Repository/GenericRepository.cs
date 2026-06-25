@@ -1,4 +1,5 @@
 using System.Formats.Tar;
+using System.Linq.Expressions;
 using AllSeriesApi.Data;
 using AllSeriesApi.Models;
 using Microsoft.EntityFrameworkCore;
@@ -9,26 +10,47 @@ public class GenericRepository<TEntity>(SeriesDbContext context) : IGenericRepos
 {
     public async Task AddAsync(TEntity entity)
     {
-        context.Set<TEntity>().Add(entity);
+        context.Set<TEntity>()
+        .Add(entity);
     }
 
     public async Task DeleteAsync(TEntity entity)
     {
-        context.Set<TEntity>().Remove(entity);
+        context.Set<TEntity>()
+        .Remove(entity);
     }
 
     public async Task<List<TEntity>> GetAllAsync()
     {
-        return await context.Set<TEntity>().ToListAsync();
+        return await context.Set<TEntity>()
+        .ToListAsync();
     }
 
     public async Task<TEntity?> GetByIdAsync(Guid Id)
     {
-        return await context.Set<TEntity>().FindAsync(Id);
+        return await context.Set<TEntity>()
+        .FindAsync(Id);
     }
 
     public async Task SaveAsync()
     {
         await context.SaveChangesAsync();
+    }
+
+    public async Task<List<TEntity>> PageAsync(int page, int size)
+    {
+        return await context.Set<TEntity>()
+        .AsNoTracking()
+        .Skip((page - 1) * size)
+        .Take(size)
+        .ToListAsync();
+    }
+
+    public async Task<List<TEntity>> SearchAsync(Expression<Func<TEntity,bool>> expression)
+    {
+        return await context.Set<TEntity>()
+        .AsNoTracking()
+        .Where(expression)
+        .ToListAsync();
     }
 }

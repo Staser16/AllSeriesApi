@@ -5,9 +5,26 @@ namespace AllSeriesApi.Servies.Film;
 
 public class FilmService(IGenericRepository<FilmModel> repository) : IFilmService
 {
-    public Task<FilmResponse> AddFilmAsync(FilmCreateRequest createRequest)
+    public async Task<FilmResponse> AddFilmAsync(FilmCreateRequest createRequest)
     {
-        throw new NotImplementedException();
+        var newFilm = new FilmModel
+        {
+            Name = createRequest.Name,
+            Rating = createRequest.Rating,
+            NumberOfMovies = createRequest.NumberOfMovies
+        };
+
+        await repository.AddAsync(newFilm);
+
+        await repository.SaveAsync();
+
+        return new FilmResponse
+        {
+            Id = newFilm.Id,
+            Name = newFilm.Name,
+            Rating = newFilm.Rating,
+            NumberOfMovies = newFilm.NumberOfMovies
+        };
     }
 
     public async Task DeleteFilmAsync(Guid Id)
@@ -46,13 +63,64 @@ public class FilmService(IGenericRepository<FilmModel> repository) : IFilmServic
         };
     }
 
-    public Task PatchFilmAsync(Guid Id, FilmPatchRequest patchRequest)
+    public async Task PatchFilmAsync(Guid Id, FilmPatchRequest patchRequest)
     {
-        throw new NotImplementedException();
+        var filmToPatch = await repository.GetByIdAsync(Id);
+
+        if (filmToPatch is null)
+            throw new KeyNotFoundException($"The film with Id {Id}, has not been found");
+
+        if (patchRequest.Name is not null && patchRequest.Name != "") filmToPatch.Name = patchRequest.Name;
+        if (patchRequest.Rating.HasValue) filmToPatch.Rating = patchRequest.Rating.Value;
+        if (patchRequest.NumberOfMovies.HasValue) filmToPatch.NumberOfMovies = patchRequest.NumberOfMovies.Value;
+        filmToPatch.UpdateDateTime = DateTime.UtcNow;
+
+        await repository.SaveAsync();
     }
 
-    public Task UpdateFilmAsync(Guid Id, FilmUpdateRequest updateRequest)
+    public async Task UpdateFilmAsync(Guid Id, FilmUpdateRequest updateRequest)
     {
-        throw new NotImplementedException();
+        var filmToUpdate = await repository.GetByIdAsync(Id);
+
+        if (filmToUpdate is null)
+            throw new KeyNotFoundException($"The film with Id {Id}, has not been found");
+
+        filmToUpdate.Name = updateRequest.Name;
+        filmToUpdate.Rating = updateRequest.Rating;
+        filmToUpdate.NumberOfMovies = updateRequest.NumberOfMovies;
+        filmToUpdate.UpdateDateTime = DateTime.UtcNow;
+
+        await repository.SaveAsync();
     }
+
+    public async Task<List<FilmResponse>> GetPageAsync(int page, int size)
+    {
+        return (await repository.PageAsync(page, size))
+        .Select(x => new FilmResponse
+        {
+            Id = x.Id,
+            Name = x.Name,
+            Rating = x.Rating,
+            NumberOfMovies = x.NumberOfMovies
+        })
+        .ToList();
+    }
+
+    public async Task<List<FilmResponse>> SearchAsync(string quote)
+    {
+        return (await repository
+        .SearchAsync(x=>x.Name.ToLower()
+            .Contains(quote.ToLower())
+            )
+        )
+        .Select(x => new FilmResponse
+        {
+            Id = x.Id,
+            Name = x.Name,
+            Rating = x.Rating,
+            NumberOfMovies = x.NumberOfMovies
+        })
+        .ToList();
+    }
+    
 }

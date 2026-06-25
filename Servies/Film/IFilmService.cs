@@ -10,4 +10,6 @@ public interface IFilmService
     public Task UpdateFilmAsync(Guid Id, FilmUpdateRequest updateRequest);
     public Task PatchFilmAsync(Guid Id, FilmPatchRequest patchRequest);
     public Task DeleteFilmAsync(Guid Id);
+    public Task<List<FilmResponse>> GetPageAsync(int page, int size);
+    public Task<List<FilmResponse>> SearchAsync(string quote);
 }
