@@ -8,5 +8,5 @@ public class SeriesModel
     public int Episodes { get; set; }
     public int Seasons { get; set; }
     public DateTime CreationDateTime { get; set; } = DateTime.UtcNow;
-    public DateTime UpdateDateTime { get; set; }
+    public DateTime? UpdateDateTime { get; set; }
 }

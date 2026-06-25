@@ -7,5 +7,5 @@ public class FilmModel
     public int Rating { get; set; }
     public int NumberOfMovies { get; set; }
     public DateTime CreationDateTime { get; set; } = DateTime.UtcNow;
-    public DateTime UpdateDateTime { get; set; }
+    public DateTime? UpdateDateTime { get; set; }
 }
