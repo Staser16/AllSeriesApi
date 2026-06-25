@@ -21,7 +21,7 @@ public class FilmController(IFilmService service) : ControllerBase
     {
         var result = await service.GetFilmByIdAsync(Id);
 
-        return result is null ? NotFound($"The Film with this Id {Id} has not been found") : Ok(await service.GetFilmByIdAsync(Id));
+        return result is null ? NotFound($"The Film with this Id {Id} has not been found") : Ok(result);
     }
 
     [HttpGet("Page")]
