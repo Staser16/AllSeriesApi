@@ -45,7 +45,7 @@ public class AnimeController(IAnimeService service) : ControllerBase
         return CreatedAtAction(nameof(GetAllAnimes), new { Id = result.Id }, result);
     }
 
-    [HttpPut]
+    [HttpPut("{Id}")]
     public async Task<ActionResult<AnimeResponse>> UpdateAnime(Guid Id, AnimeUpdateRequest updateRequest)
     {
         try
@@ -59,7 +59,7 @@ public class AnimeController(IAnimeService service) : ControllerBase
         }
     }
 
-    [HttpPatch]
+    [HttpPatch("{Id}")]
     public async Task<ActionResult<AnimeResponse>> PatchAnime(Guid Id, AnimePatchRequest patchRequest)
     {
         try
@@ -73,7 +73,7 @@ public class AnimeController(IAnimeService service) : ControllerBase
         }
     }
     
-    [HttpDelete]
+    [HttpDelete("{Id}")]
     public async Task<ActionResult<AnimeResponse>> DeleteAnime(Guid Id)
     {
         try

@@ -44,7 +44,7 @@ public class SeriesController(ISeriesService service) : ControllerBase
         return CreatedAtAction(nameof(GetAllSeries), new { Id = result.Id }, result);
     }
 
-    [HttpPut]
+    [HttpPut("{Id}")]
     public async Task<ActionResult<SeriesResponse>> UpdateSeries(Guid Id, SeriesUpdateRequest updateRequest)
     {
         try
@@ -58,7 +58,7 @@ public class SeriesController(ISeriesService service) : ControllerBase
         }
     }
 
-    [HttpPatch]
+    [HttpPatch("{Id}")]
     public async Task<ActionResult<SeriesResponse>> PatchSeries(Guid Id, SeriesPatchRequest patchRequest)
     {
         try
@@ -72,7 +72,7 @@ public class SeriesController(ISeriesService service) : ControllerBase
         }
     }
     
-    [HttpDelete]
+    [HttpDelete("{Id}")]
     public async Task<ActionResult<SeriesResponse>> DeleteSeries(Guid Id)
     {
         try

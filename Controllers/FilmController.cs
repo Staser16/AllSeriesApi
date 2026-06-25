@@ -44,7 +44,7 @@ public class FilmController(IFilmService service) : ControllerBase
         return CreatedAtAction(nameof(GetAllFilms), new { Id = result.Id }, result);
     }
 
-    [HttpPut]
+    [HttpPut("{Id}")]
     public async Task<ActionResult<FilmResponse>> UpdateFilm(Guid Id, FilmUpdateRequest updateRequest)
     {
         try
@@ -58,7 +58,7 @@ public class FilmController(IFilmService service) : ControllerBase
         }
     }
 
-    [HttpPatch]
+    [HttpPatch("{Id}")]
     public async Task<ActionResult<FilmResponse>> PatchFilm(Guid Id, FilmPatchRequest patchRequest)
     {
         try
@@ -72,7 +72,7 @@ public class FilmController(IFilmService service) : ControllerBase
         }
     }
     
-    [HttpDelete]
+    [HttpDelete("{Id}")]
     public async Task<ActionResult<FilmResponse>> DeleteFilm(Guid Id)
     {
         try
