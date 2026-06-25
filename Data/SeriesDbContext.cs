@@ -13,6 +13,11 @@ public class SeriesDbContext(DbContextOptions<SeriesDbContext> options) : DbCont
     {
         modelBuilder
         .Entity<SeriesModel>()
+        .Property(x => x.Id)
+        .HasColumnType("binary(16)");
+
+        modelBuilder
+        .Entity<SeriesModel>()
         .Property(x => x.Name)
         .HasMaxLength(100)
         .IsRequired();
@@ -32,6 +37,10 @@ public class SeriesDbContext(DbContextOptions<SeriesDbContext> options) : DbCont
         .Property(x => x.Seasons)
         .IsRequired();
 
+        modelBuilder.Entity<FilmModel>()
+        .Property(x => x.Id)
+        .HasColumnType("binary(16)");
+
         modelBuilder
         .Entity<FilmModel>()
         .Property(x => x.Name)
@@ -47,8 +56,12 @@ public class SeriesDbContext(DbContextOptions<SeriesDbContext> options) : DbCont
         .Entity<FilmModel>()
         .Property(x => x.NumberOfMovies)
         .IsRequired();
-    
-        
+
+        modelBuilder
+        .Entity<AnimeModel>()
+        .Property(x => x.Id)
+        .HasColumnType("binary(16)");
+
         modelBuilder
         .Entity<AnimeModel>()
         .Property(x => x.Name)

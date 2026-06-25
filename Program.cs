@@ -3,12 +3,15 @@ using AllSeriesApi.Models;
 using AllSeriesApi.Data;
 using Microsoft.EntityFrameworkCore;
 using AllSeriesApi.Repository;
+using AllSeriesApi.Servies.Film;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+
+builder.Services.AddControllers();
 
 builder.Services.AddDbContext<SeriesDbContext>(x =>
     x.UseMySql(
@@ -18,6 +21,7 @@ builder.Services.AddDbContext<SeriesDbContext>(x =>
 );
 
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+builder.Services.AddScoped<IFilmService, FilmService>();
 
 var app = builder.Build();
 
