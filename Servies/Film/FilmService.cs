@@ -1,6 +1,7 @@
 using AllSeriesApi.Repository;
 using AllSeriesApi.Models;
 using AllSeriesApi.DTOS.Film;
+using Microsoft.AspNetCore.Http.HttpResults;
 namespace AllSeriesApi.Servies.Film;
 
 public class FilmService(IGenericRepository<FilmModel> repository) : IFilmService
@@ -70,7 +71,13 @@ public class FilmService(IGenericRepository<FilmModel> repository) : IFilmServic
         if (filmToPatch is null)
             throw new KeyNotFoundException($"The film with Id {Id}, has not been found");
 
-        if (patchRequest.Name is not null && patchRequest.Name != "") filmToPatch.Name = patchRequest.Name;
+        if (patchRequest.Name is not null && patchRequest.Name != "")
+        {
+            if (patchRequest.Name.Length < 3)
+                throw new ArgumentException("Name must be at least 3 characters long");
+            else
+                filmToPatch.Name = patchRequest.Name;
+        }
         if (patchRequest.Rating.HasValue) filmToPatch.Rating = patchRequest.Rating.Value;
         if (patchRequest.NumberOfMovies.HasValue) filmToPatch.NumberOfMovies = patchRequest.NumberOfMovies.Value;
         filmToPatch.UpdateDateTime = DateTime.UtcNow;
