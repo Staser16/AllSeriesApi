@@ -2,14 +2,14 @@ using AllSeriesApi.Repository;
 using AllSeriesApi.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
 using AllSeriesApi.DTOS.Anime;
-using AllSeriesApi.DTOS.Film;
+using AllSeriesApi.Services.Series;
 namespace AllSeriesApi.Servies.Anime;
 
 public class AnimeService(IGenericRepository<AnimeModel> repository) : IAnimeService
 {
     public async Task<AnimeResponse> AddAnimeAsync(AnimeCreateRequest createRequest)
     {
-        var newFilm = new AnimeModel
+        var newAnime = new AnimeModel
         {
             Name = createRequest.Name,
             Rating = createRequest.Rating,
@@ -17,28 +17,28 @@ public class AnimeService(IGenericRepository<AnimeModel> repository) : IAnimeSer
             Seasons = createRequest.Seasons
         };
 
-        await repository.AddAsync(newFilm);
+        await repository.AddAsync(newAnime);
 
         await repository.SaveAsync();
 
         return new AnimeResponse
         {
-            Id = newFilm.Id,
-            Name = createRequest.Name,
-            Rating = createRequest.Rating,
-            Episodes = createRequest.Episodes,
-            Seasons = createRequest.Seasons
+            Id = newAnime.Id,
+            Name = newAnime.Name,
+            Rating = newAnime.Rating,
+            Episodes = newAnime.Episodes,
+            Seasons = newAnime.Seasons
         };
     }
 
     public async Task DeleteAnimeAsync(Guid Id)
     {
-        var FilmDelete = await repository.GetByIdAsync(Id);
+        var AnimeDelete = await repository.GetByIdAsync(Id);
 
-        if (FilmDelete is null)
+        if (AnimeDelete is null)
             throw new KeyNotFoundException($"Anime with Id: {Id}, has not been found");
 
-        await repository.DeleteAsync(FilmDelete);
+        await repository.DeleteAsync(AnimeDelete);
         await repository.SaveAsync();
     }
 

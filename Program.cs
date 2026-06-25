@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using AllSeriesApi.Repository;
 using AllSeriesApi.Servies.Film;
 using AllSeriesApi.Servies.Anime;
+using AllSeriesApi.Services.Series;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +25,7 @@ builder.Services.AddDbContext<SeriesDbContext>(x =>
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IAnimeService, AnimeService>();
 builder.Services.AddScoped<IFilmService, FilmService>();
+builder.Services.AddScoped<ISeriesService, SeriesService>();
 
 var app = builder.Build();
 

@@ -1,4 +1,5 @@
 using AllSeriesApi.DTOS.Anime;
+using AllSeriesApi.Services.Series;
 namespace AllSeriesApi.Servies.Anime;
 
 public interface IAnimeService

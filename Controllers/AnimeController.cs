@@ -3,6 +3,7 @@ using AllSeriesApi.Servies.Anime;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using AllSeriesApi.Services.Series;
 
 namespace AllSeriesApi.Controllers;
 
@@ -25,7 +26,7 @@ public class AnimeController(IAnimeService service) : ControllerBase
     }
 
     [HttpGet("Page")]
-    public async Task<ActionResult<List<AnimeResponse>>> GetAnimesFilms([FromQuery] AnimePageRequest pageRequest)
+    public async Task<ActionResult<List<AnimeResponse>>> GetAnimesPaged([FromQuery] AnimePageRequest pageRequest)
     {
         return Ok(await service.GetPageAsync(pageRequest.page, pageRequest.size));
     }
