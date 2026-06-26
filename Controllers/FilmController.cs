@@ -12,45 +12,45 @@ namespace AllSeriesApi.Controllers;
 public class FilmController(IFilmService service) : ControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<List<FilmResponse>>> GetAllFilms()
+    public async Task<ActionResult<List<FilmResponse>>> GetAllFilms(CancellationToken ct)
     {
-        return Ok(await service.GetAllFilmsAsync());
+        return Ok(await service.GetAllFilmsAsync(ct));
     }
 
     [HttpGet("{Id}")]
-    public async Task<ActionResult<FilmResponse>> GetFilmById(Guid Id)
+    public async Task<ActionResult<FilmResponse>> GetFilmById(Guid Id, CancellationToken ct)
     {
-        var result = await service.GetFilmByIdAsync(Id);
+        var result = await service.GetFilmByIdAsync(Id, ct);
 
         return result is null ? NotFound($"The Film with this Id {Id} has not been found") : Ok(result);
     }
 
     [HttpGet("Page")]
-    public async Task<ActionResult<List<FilmResponse>>> GetPagedFilms([FromQuery] PageRequest pageRequest)
+    public async Task<ActionResult<List<FilmResponse>>> GetPagedFilms([FromQuery] PageRequest pageRequest, CancellationToken ct)
     {
-        return Ok(await service.GetPageAsync(pageRequest.page, pageRequest.size));
+        return Ok(await service.GetPageAsync(pageRequest.page, pageRequest.size, ct));
     }
 
     [HttpGet("Search")]
-    public async Task<ActionResult<List<FilmResponse>>> SearchFilms([FromQuery] SearchRequest searchRequest)
+    public async Task<ActionResult<List<FilmResponse>>> SearchFilms([FromQuery] SearchRequest searchRequest, CancellationToken ct)
     {
-        return Ok(await service.SearchAsync(searchRequest.quote));
+        return Ok(await service.SearchAsync(searchRequest.quote, ct));
     }
 
     [HttpPost]
-    public async Task<ActionResult<FilmResponse>> AddFilm(FilmCreateRequest createRequest)
+    public async Task<ActionResult<FilmResponse>> AddFilm(FilmCreateRequest createRequest, CancellationToken ct)
     {
-        var result = await service.AddFilmAsync(createRequest);
+        var result = await service.AddFilmAsync(createRequest, ct);
 
-        return CreatedAtAction(nameof(GetAllFilms), new { Id = result.Id }, result);
+        return CreatedAtAction(nameof(GetFilmById), new { Id = result.Id }, result);
     }
 
     [HttpPut("{Id}")]
-    public async Task<ActionResult<FilmResponse>> UpdateFilm(Guid Id, FilmUpdateRequest updateRequest)
+    public async Task<ActionResult<FilmResponse>> UpdateFilm(Guid Id, FilmUpdateRequest updateRequest, CancellationToken ct)
     {
         try
         {
-            await service.UpdateFilmAsync(Id, updateRequest);
+            await service.UpdateFilmAsync(Id, updateRequest, ct);
             return NoContent();
         }
         catch (KeyNotFoundException)
@@ -60,11 +60,11 @@ public class FilmController(IFilmService service) : ControllerBase
     }
 
     [HttpPatch("{Id}")]
-    public async Task<ActionResult<FilmResponse>> PatchFilm(Guid Id, FilmPatchRequest patchRequest)
+    public async Task<ActionResult<FilmResponse>> PatchFilm(Guid Id, FilmPatchRequest patchRequest, CancellationToken ct)
     {
         try
         {
-            await service.PatchFilmAsync(Id, patchRequest);
+            await service.PatchFilmAsync(Id, patchRequest, ct);
             return NoContent();
         }
         catch (KeyNotFoundException)
@@ -74,11 +74,11 @@ public class FilmController(IFilmService service) : ControllerBase
     }
     
     [HttpDelete("{Id}")]
-    public async Task<ActionResult<FilmResponse>> DeleteFilm(Guid Id)
+    public async Task<ActionResult<FilmResponse>> DeleteFilm(Guid Id, CancellationToken ct)
     {
         try
         {
-            await service.DeleteFilmAsync(Id);
+            await service.DeleteFilmAsync(Id, ct);
             return NoContent();
         }
         catch (KeyNotFoundException)

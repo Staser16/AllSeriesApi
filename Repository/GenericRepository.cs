@@ -8,10 +8,10 @@ namespace AllSeriesApi.Repository;
 
 public class GenericRepository<TEntity>(SeriesDbContext context) : IGenericRepository<TEntity> where TEntity : class
 {
-    public async Task AddAsync(TEntity entity)
+    public async Task AddAsync(TEntity entity, CancellationToken ct)
     {
         await context.Set<TEntity>()
-        .AddAsync(entity);
+        .AddAsync(entity, ct);
     }
 
     public void Delete(TEntity entity)
@@ -20,37 +20,37 @@ public class GenericRepository<TEntity>(SeriesDbContext context) : IGenericRepos
         .Remove(entity);
     }
 
-    public async Task<List<TEntity>> GetAllAsync()
+    public async Task<List<TEntity>> GetAllAsync(CancellationToken ct)
     {
         return await context.Set<TEntity>()
-        .ToListAsync();
+        .ToListAsync(ct);
     }
 
-    public async Task<TEntity?> GetByIdAsync(Guid Id)
+    public async Task<TEntity?> GetByIdAsync(Guid Id, CancellationToken ct)
     {
         return await context.Set<TEntity>()
-        .FindAsync(Id);
+        .FindAsync(Id, ct);
     }
 
-    public async Task SaveAsync()
+    public async Task SaveAsync(CancellationToken ct)
     {
-        await context.SaveChangesAsync();
+        await context.SaveChangesAsync(ct);
     }
 
-    public async Task<List<TEntity>> PageAsync(int page, int size)
+    public async Task<List<TEntity>> PageAsync(int page, int size, CancellationToken ct)
     {
         return await context.Set<TEntity>()
         .AsNoTracking()
         .Skip((page - 1) * size)
         .Take(size)
-        .ToListAsync();
+        .ToListAsync(ct);
     }
 
-    public async Task<List<TEntity>> SearchAsync(Expression<Func<TEntity,bool>> expression)
+    public async Task<List<TEntity>> SearchAsync(Expression<Func<TEntity,bool>> expression, CancellationToken ct)
     {
         return await context.Set<TEntity>()
         .AsNoTracking()
         .Where(expression)
-        .ToListAsync();
+        .ToListAsync(ct);
     }
 }

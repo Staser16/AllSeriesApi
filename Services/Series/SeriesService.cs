@@ -7,7 +7,7 @@ namespace AllSeriesApi.Services.Series;
 
 public class SeriesService(IGenericRepository<SeriesModel> repository) : ISeriesService
 {
-    public async Task<SeriesResponse> AddSeriesAsync(SeriesCreateRequest createRequest)
+    public async Task<SeriesResponse> AddSeriesAsync(SeriesCreateRequest createRequest, CancellationToken ct)
     {
         var newSeries = new SeriesModel
         {
@@ -17,9 +17,9 @@ public class SeriesService(IGenericRepository<SeriesModel> repository) : ISeries
             Seasons = createRequest.Seasons
         };
 
-        await repository.AddAsync(newSeries);
+        await repository.AddAsync(newSeries, ct);
 
-        await repository.SaveAsync();
+        await repository.SaveAsync(ct);
 
         return new SeriesResponse
         {
@@ -31,19 +31,19 @@ public class SeriesService(IGenericRepository<SeriesModel> repository) : ISeries
         };
     }
 
-    public async Task DeleteSeriesAsync(Guid Id)
+    public async Task DeleteSeriesAsync(Guid Id, CancellationToken ct)
     {
-        var seriesDelete = await repository.GetByIdAsync(Id);
+        var seriesDelete = await repository.GetByIdAsync(Id, ct);
 
         if (seriesDelete is null)
             throw new KeyNotFoundException($"Serieswith Id: {Id}, has not been found");
 
         repository.Delete(seriesDelete);
-        await repository.SaveAsync();
+        await repository.SaveAsync(ct);
     }
 
-    public async Task<List<SeriesResponse>> GetAllSeriesAsync()
-    => (await repository.GetAllAsync()).Select(x => new SeriesResponse
+    public async Task<List<SeriesResponse>> GetAllSeriesAsync(CancellationToken ct)
+    => (await repository.GetAllAsync(ct)).Select(x => new SeriesResponse
         {
             Id = x.Id,
             Name = x.Name,
@@ -52,9 +52,9 @@ public class SeriesService(IGenericRepository<SeriesModel> repository) : ISeries
             Seasons = x.Seasons
         }).ToList();
 
-    public async Task<SeriesResponse?> GetSeriesByIdAsync(Guid Id)
+    public async Task<SeriesResponse?> GetSeriesByIdAsync(Guid Id, CancellationToken ct)
     {
-        var seriesById = await repository.GetByIdAsync(Id);
+        var seriesById = await repository.GetByIdAsync(Id, ct);
 
         if (seriesById is null)
             throw new KeyNotFoundException($"Series with Id: {Id}, has not been found");
@@ -69,9 +69,9 @@ public class SeriesService(IGenericRepository<SeriesModel> repository) : ISeries
         };
     }
 
-    public async Task PatchSeriesAsync(Guid Id, SeriesPatchRequest patchRequest)
+    public async Task PatchSeriesAsync(Guid Id, SeriesPatchRequest patchRequest, CancellationToken ct)
     {
-        var seriesToPatch = await repository.GetByIdAsync(Id);
+        var seriesToPatch = await repository.GetByIdAsync(Id, ct);
 
         if (seriesToPatch is null)
             throw new KeyNotFoundException($"The series with Id {Id}, has not been found");
@@ -88,12 +88,12 @@ public class SeriesService(IGenericRepository<SeriesModel> repository) : ISeries
         if (patchRequest.Episodes.HasValue) seriesToPatch.Episodes = patchRequest.Episodes.Value;
         seriesToPatch.UpdateDateTime = DateTime.UtcNow;
 
-        await repository.SaveAsync();
+        await repository.SaveAsync(ct);
     }
 
-    public async Task UpdateSeriesAsync(Guid Id, SeriesUpdateRequest updateRequest)
+    public async Task UpdateSeriesAsync(Guid Id, SeriesUpdateRequest updateRequest, CancellationToken ct)
     {
-        var seriesToUpdate = await repository.GetByIdAsync(Id);
+        var seriesToUpdate = await repository.GetByIdAsync(Id, ct);
 
         if (seriesToUpdate is null)
             throw new KeyNotFoundException($"The series with Id {Id}, has not been found");
@@ -104,12 +104,12 @@ public class SeriesService(IGenericRepository<SeriesModel> repository) : ISeries
         seriesToUpdate.Episodes = updateRequest.Episodes;
         seriesToUpdate.UpdateDateTime = DateTime.UtcNow;
 
-        await repository.SaveAsync();
+        await repository.SaveAsync(ct);
     }
 
-    public async Task<List<SeriesResponse>> GetPageAsync(int page, int size)
+    public async Task<List<SeriesResponse>> GetPageAsync(int page, int size, CancellationToken ct)
     {
-        return (await repository.PageAsync(page, size))
+        return (await repository.PageAsync(page, size, ct))
         .Select(x => new SeriesResponse
         {
             Id = x.Id,
@@ -121,11 +121,12 @@ public class SeriesService(IGenericRepository<SeriesModel> repository) : ISeries
         .ToList();
     }
 
-    public async Task<List<SeriesResponse>> SearchAsync(string quote)
+    public async Task<List<SeriesResponse>> SearchAsync(string quote, CancellationToken ct)
     {
         return (await repository
         .SearchAsync(x=>x.Name.ToLower()
-            .Contains(quote.ToLower())
+            .Contains(quote.ToLower()),
+            ct
             )
         )
         .Select(x => new SeriesResponse

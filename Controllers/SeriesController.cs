@@ -12,45 +12,45 @@ namespace AllSeriesApi.Controllers;
 public class SeriesController(ISeriesService service) : ControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<List<SeriesResponse>>> GetAllSeries()
+    public async Task<ActionResult<List<SeriesResponse>>> GetAllSeries(CancellationToken ct)
     {
-        return Ok(await service.GetAllSeriesAsync());
+        return Ok(await service.GetAllSeriesAsync(ct));
     }
 
     [HttpGet("{Id}")]
-    public async Task<ActionResult<SeriesResponse>> GetSeriesById(Guid Id)
+    public async Task<ActionResult<SeriesResponse>> GetSeriesById(Guid Id, CancellationToken ct)
     {
-        var result = await service.GetSeriesByIdAsync(Id);
+        var result = await service.GetSeriesByIdAsync(Id, ct);
 
         return result is null ? NotFound($"The Series with this Id {Id} has not been found") : Ok(result);
     }
 
     [HttpGet("Page")]
-    public async Task<ActionResult<List<SeriesResponse>>> GetPagedSeries([FromQuery] PageRequest pageRequest)
+    public async Task<ActionResult<List<SeriesResponse>>> GetPagedSeries([FromQuery] PageRequest pageRequest, CancellationToken ct)
     {
-        return Ok(await service.GetPageAsync(pageRequest.page, pageRequest.size));
+        return Ok(await service.GetPageAsync(pageRequest.page, pageRequest.size, ct));
     }
 
     [HttpGet("Search")]
-    public async Task<ActionResult<List<SeriesResponse>>> SearchSeries([FromQuery] SearchRequest searchRequest)
+    public async Task<ActionResult<List<SeriesResponse>>> SearchSeries([FromQuery] SearchRequest searchRequest, CancellationToken ct)
     {
-        return Ok(await service.SearchAsync(searchRequest.quote));
+        return Ok(await service.SearchAsync(searchRequest.quote, ct));
     }
 
     [HttpPost]
-    public async Task<ActionResult<SeriesResponse>> AddSeries(SeriesCreateRequest createRequest)
+    public async Task<ActionResult<SeriesResponse>> AddSeries(SeriesCreateRequest createRequest, CancellationToken ct)
     {
-        var result = await service.AddSeriesAsync(createRequest);
+        var result = await service.AddSeriesAsync(createRequest, ct);
 
         return CreatedAtAction(nameof(GetAllSeries), new { Id = result.Id }, result);
     }
 
     [HttpPut("{Id}")]
-    public async Task<ActionResult<SeriesResponse>> UpdateSeries(Guid Id, SeriesUpdateRequest updateRequest)
+    public async Task<ActionResult<SeriesResponse>> UpdateSeries(Guid Id, SeriesUpdateRequest updateRequest, CancellationToken ct)
     {
         try
         {
-            await service.UpdateSeriesAsync(Id, updateRequest);
+            await service.UpdateSeriesAsync(Id, updateRequest, ct);
             return NoContent();
         }
         catch (KeyNotFoundException)
@@ -60,11 +60,11 @@ public class SeriesController(ISeriesService service) : ControllerBase
     }
 
     [HttpPatch("{Id}")]
-    public async Task<ActionResult<SeriesResponse>> PatchSeries(Guid Id, SeriesPatchRequest patchRequest)
+    public async Task<ActionResult<SeriesResponse>> PatchSeries(Guid Id, SeriesPatchRequest patchRequest, CancellationToken ct)
     {
         try
         {
-            await service.PatchSeriesAsync(Id, patchRequest);
+            await service.PatchSeriesAsync(Id, patchRequest, ct);
             return NoContent();
         }
         catch (KeyNotFoundException)
@@ -74,11 +74,11 @@ public class SeriesController(ISeriesService service) : ControllerBase
     }
     
     [HttpDelete("{Id}")]
-    public async Task<ActionResult<SeriesResponse>> DeleteSeries(Guid Id)
+    public async Task<ActionResult<SeriesResponse>> DeleteSeries(Guid Id, CancellationToken ct)
     {
         try
         {
-            await service.DeleteSeriesAsync(Id);
+            await service.DeleteSeriesAsync(Id, ct);
             return NoContent();
         }
         catch (KeyNotFoundException)

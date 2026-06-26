@@ -4,12 +4,12 @@ namespace AllSeriesApi.Servies.Film;
 
 public interface IFilmService
 {
-    public Task<List<FilmResponse>> GetAllFilmsAsync();
-    public Task<FilmResponse?> GetFilmByIdAsync(Guid Id);
-    public Task<FilmResponse> AddFilmAsync(FilmCreateRequest createRequest);
-    public Task UpdateFilmAsync(Guid Id, FilmUpdateRequest updateRequest);
-    public Task PatchFilmAsync(Guid Id, FilmPatchRequest patchRequest);
-    public Task DeleteFilmAsync(Guid Id);
-    public Task<List<FilmResponse>> GetPageAsync(int page, int size);
-    public Task<List<FilmResponse>> SearchAsync(string quote);
+    public Task<List<FilmResponse>> GetAllFilmsAsync(CancellationToken ct);
+    public Task<FilmResponse?> GetFilmByIdAsync(Guid Id, CancellationToken ct);
+    public Task<FilmResponse> AddFilmAsync(FilmCreateRequest createRequest, CancellationToken ct);
+    public Task UpdateFilmAsync(Guid Id, FilmUpdateRequest updateRequest, CancellationToken ct);
+    public Task PatchFilmAsync(Guid Id, FilmPatchRequest patchRequest,CancellationToken ct);
+    public Task DeleteFilmAsync(Guid Id, CancellationToken ct);
+    public Task<List<FilmResponse>> GetPageAsync(int page, int size, CancellationToken ct);
+    public Task<List<FilmResponse>> SearchAsync(string quote, CancellationToken ct);
 }

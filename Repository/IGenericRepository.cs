@@ -5,11 +5,11 @@ namespace AllSeriesApi.Repository;
 
 public interface IGenericRepository<TEntity> where TEntity : class
 {
-    public Task<List<TEntity>> GetAllAsync();
-    public Task<TEntity?> GetByIdAsync(Guid Id);
+    public Task<List<TEntity>> GetAllAsync(CancellationToken ct);
+    public Task<TEntity?> GetByIdAsync(Guid Id, CancellationToken ct);
     public void Delete(TEntity entity);
-    public Task SaveAsync();
-    public Task AddAsync(TEntity entity);
-    public Task<List<TEntity>> PageAsync(int page, int size);
-    public Task<List<TEntity>> SearchAsync(Expression<Func<TEntity,bool>> expression); 
+    public Task SaveAsync(CancellationToken ct);
+    public Task AddAsync(TEntity entity, CancellationToken ct);
+    public Task<List<TEntity>> PageAsync(int page, int size, CancellationToken ct);
+    public Task<List<TEntity>> SearchAsync(Expression<Func<TEntity,bool>> expression, CancellationToken ct);
 }

@@ -7,7 +7,7 @@ namespace AllSeriesApi.Servies.Anime;
 
 public class AnimeService(IGenericRepository<AnimeModel> repository) : IAnimeService
 {
-    public async Task<AnimeResponse> AddAnimeAsync(AnimeCreateRequest createRequest)
+    public async Task<AnimeResponse> AddAnimeAsync(AnimeCreateRequest createRequest, CancellationToken ct)
     {
         var newAnime = new AnimeModel
         {
@@ -17,9 +17,9 @@ public class AnimeService(IGenericRepository<AnimeModel> repository) : IAnimeSer
             Seasons = createRequest.Seasons
         };
 
-        await repository.AddAsync(newAnime);
+        await repository.AddAsync(newAnime, ct);
 
-        await repository.SaveAsync();
+        await repository.SaveAsync(ct);
 
         return new AnimeResponse
         {
@@ -31,19 +31,19 @@ public class AnimeService(IGenericRepository<AnimeModel> repository) : IAnimeSer
         };
     }
 
-    public async Task DeleteAnimeAsync(Guid Id)
+    public async Task DeleteAnimeAsync(Guid Id, CancellationToken ct)
     {
-        var AnimeDelete = await repository.GetByIdAsync(Id);
+        var AnimeDelete = await repository.GetByIdAsync(Id, ct);
 
         if (AnimeDelete is null)
             throw new KeyNotFoundException($"Anime with Id: {Id}, has not been found");
 
         repository.Delete(AnimeDelete);
-        await repository.SaveAsync();
+        await repository.SaveAsync(ct);
     }
 
-    public async Task<List<AnimeResponse>> GetAllAnimeAsync()
-    => (await repository.GetAllAsync()).Select(x => new AnimeResponse
+    public async Task<List<AnimeResponse>> GetAllAnimeAsync(CancellationToken ct)
+    => (await repository.GetAllAsync(ct)).Select(x => new AnimeResponse
         {
             Id = x.Id,
             Name = x.Name,
@@ -52,9 +52,9 @@ public class AnimeService(IGenericRepository<AnimeModel> repository) : IAnimeSer
             Seasons = x.Seasons
         }).ToList();
 
-    public async Task<AnimeResponse?> GetAnimeByIdAsync(Guid Id)
+    public async Task<AnimeResponse?> GetAnimeByIdAsync(Guid Id,CancellationToken ct)
     {
-        var animeById = await repository.GetByIdAsync(Id);
+        var animeById = await repository.GetByIdAsync(Id, ct);
 
         if (animeById is null)
             throw new KeyNotFoundException($"Anime with Id: {Id}, has not been found");
@@ -69,9 +69,9 @@ public class AnimeService(IGenericRepository<AnimeModel> repository) : IAnimeSer
         };
     }
 
-    public async Task PatchAnimeAsync(Guid Id, AnimePatchRequest patchRequest)
+    public async Task PatchAnimeAsync(Guid Id, AnimePatchRequest patchRequest, CancellationToken ct)
     {
-        var animeToPatch = await repository.GetByIdAsync(Id);
+        var animeToPatch = await repository.GetByIdAsync(Id, ct);
 
         if (animeToPatch is null)
             throw new KeyNotFoundException($"The anime with Id {Id}, has not been found");
@@ -88,12 +88,12 @@ public class AnimeService(IGenericRepository<AnimeModel> repository) : IAnimeSer
         if (patchRequest.Episodes.HasValue) animeToPatch.Episodes = patchRequest.Episodes.Value;
         animeToPatch.UpdateDateTime = DateTime.UtcNow;
 
-        await repository.SaveAsync();
+        await repository.SaveAsync(ct);
     }
 
-    public async Task UpdateAnimeAsync(Guid Id, AnimeUpdateRequest updateRequest)
+    public async Task UpdateAnimeAsync(Guid Id, AnimeUpdateRequest updateRequest, CancellationToken ct)
     {
-        var animeToUpdate = await repository.GetByIdAsync(Id);
+        var animeToUpdate = await repository.GetByIdAsync(Id, ct);
 
         if (animeToUpdate is null)
             throw new KeyNotFoundException($"The anime with Id {Id}, has not been found");
@@ -104,12 +104,12 @@ public class AnimeService(IGenericRepository<AnimeModel> repository) : IAnimeSer
         animeToUpdate.Episodes = updateRequest.Episodes;
         animeToUpdate.UpdateDateTime = DateTime.UtcNow;
 
-        await repository.SaveAsync();
+        await repository.SaveAsync(ct);
     }
 
-    public async Task<List<AnimeResponse>> GetPageAsync(int page, int size)
+    public async Task<List<AnimeResponse>> GetPageAsync(int page, int size, CancellationToken ct)
     {
-        return (await repository.PageAsync(page, size))
+        return (await repository.PageAsync(page, size, ct))
         .Select(x => new AnimeResponse
         {
             Id = x.Id,
@@ -121,11 +121,12 @@ public class AnimeService(IGenericRepository<AnimeModel> repository) : IAnimeSer
         .ToList();
     }
 
-    public async Task<List<AnimeResponse>> SearchAsync(string quote)
+    public async Task<List<AnimeResponse>> SearchAsync(string quote, CancellationToken ct)
     {
         return (await repository
         .SearchAsync(x=>x.Name.ToLower()
-            .Contains(quote.ToLower())
+            .Contains(quote.ToLower()),
+            ct
             )
         )
         .Select(x => new AnimeResponse

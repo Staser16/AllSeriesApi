@@ -6,7 +6,7 @@ namespace AllSeriesApi.Servies.Film;
 
 public class FilmService(IGenericRepository<FilmModel> repository) : IFilmService
 {
-    public async Task<FilmResponse> AddFilmAsync(FilmCreateRequest createRequest)
+    public async Task<FilmResponse> AddFilmAsync(FilmCreateRequest createRequest, CancellationToken ct)
     {
         var newFilm = new FilmModel
         {
@@ -15,9 +15,9 @@ public class FilmService(IGenericRepository<FilmModel> repository) : IFilmServic
             NumberOfMovies = createRequest.NumberOfMovies
         };
 
-        await repository.AddAsync(newFilm);
+        await repository.AddAsync(newFilm, ct);
 
-        await repository.SaveAsync();
+        await repository.SaveAsync(ct);
 
         return new FilmResponse
         {
@@ -28,19 +28,19 @@ public class FilmService(IGenericRepository<FilmModel> repository) : IFilmServic
         };
     }
 
-    public async Task DeleteFilmAsync(Guid Id)
+    public async Task DeleteFilmAsync(Guid Id, CancellationToken ct)
     {
-        var FilmDelete = await repository.GetByIdAsync(Id);
+        var FilmDelete = await repository.GetByIdAsync(Id, ct);
 
         if (FilmDelete is null)
             throw new KeyNotFoundException($"Film with Id: {Id}, has not been found");
 
         repository.Delete(FilmDelete);
-        await repository.SaveAsync();
+        await repository.SaveAsync(ct);
     }
 
-    public async Task<List<FilmResponse>> GetAllFilmsAsync()
-    => (await repository.GetAllAsync()).Select(x => new FilmResponse
+    public async Task<List<FilmResponse>> GetAllFilmsAsync(CancellationToken ct)
+    => (await repository.GetAllAsync(ct)).Select(x => new FilmResponse
         {
             Id = x.Id,
             Name = x.Name,
@@ -48,9 +48,9 @@ public class FilmService(IGenericRepository<FilmModel> repository) : IFilmServic
             NumberOfMovies = x.NumberOfMovies
         }).ToList();
 
-    public async Task<FilmResponse?> GetFilmByIdAsync(Guid Id)
+    public async Task<FilmResponse?> GetFilmByIdAsync(Guid Id, CancellationToken ct)
     {
-        var FilmById = await repository.GetByIdAsync(Id);
+        var FilmById = await repository.GetByIdAsync(Id, ct);
 
         if (FilmById is null)
             throw new KeyNotFoundException($"Film with Id: {Id}, has not been found");
@@ -64,9 +64,9 @@ public class FilmService(IGenericRepository<FilmModel> repository) : IFilmServic
         };
     }
 
-    public async Task PatchFilmAsync(Guid Id, FilmPatchRequest patchRequest)
+    public async Task PatchFilmAsync(Guid Id, FilmPatchRequest patchRequest, CancellationToken ct)
     {
-        var filmToPatch = await repository.GetByIdAsync(Id);
+        var filmToPatch = await repository.GetByIdAsync(Id, ct);
 
         if (filmToPatch is null)
             throw new KeyNotFoundException($"The film with Id {Id}, has not been found");
@@ -82,12 +82,12 @@ public class FilmService(IGenericRepository<FilmModel> repository) : IFilmServic
         if (patchRequest.NumberOfMovies.HasValue) filmToPatch.NumberOfMovies = patchRequest.NumberOfMovies.Value;
         filmToPatch.UpdateDateTime = DateTime.UtcNow;
 
-        await repository.SaveAsync();
+        await repository.SaveAsync(ct);
     }
 
-    public async Task UpdateFilmAsync(Guid Id, FilmUpdateRequest updateRequest)
+    public async Task UpdateFilmAsync(Guid Id, FilmUpdateRequest updateRequest, CancellationToken ct)
     {
-        var filmToUpdate = await repository.GetByIdAsync(Id);
+        var filmToUpdate = await repository.GetByIdAsync(Id, ct);
 
         if (filmToUpdate is null)
             throw new KeyNotFoundException($"The film with Id {Id}, has not been found");
@@ -97,12 +97,12 @@ public class FilmService(IGenericRepository<FilmModel> repository) : IFilmServic
         filmToUpdate.NumberOfMovies = updateRequest.NumberOfMovies;
         filmToUpdate.UpdateDateTime = DateTime.UtcNow;
 
-        await repository.SaveAsync();
+        await repository.SaveAsync(ct);
     }
 
-    public async Task<List<FilmResponse>> GetPageAsync(int page, int size)
+    public async Task<List<FilmResponse>> GetPageAsync(int page, int size, CancellationToken ct)
     {
-        return (await repository.PageAsync(page, size))
+        return (await repository.PageAsync(page, size, ct))
         .Select(x => new FilmResponse
         {
             Id = x.Id,
@@ -113,11 +113,12 @@ public class FilmService(IGenericRepository<FilmModel> repository) : IFilmServic
         .ToList();
     }
 
-    public async Task<List<FilmResponse>> SearchAsync(string quote)
+    public async Task<List<FilmResponse>> SearchAsync(string quote, CancellationToken ct)
     {
         return (await repository
         .SearchAsync(x=>x.Name.ToLower()
-            .Contains(quote.ToLower())
+            .Contains(quote.ToLower()),
+            ct
             )
         )
         .Select(x => new FilmResponse

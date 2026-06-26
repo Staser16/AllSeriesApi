@@ -13,45 +13,45 @@ namespace AllSeriesApi.Controllers;
 public class AnimeController(IAnimeService service) : ControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<List<AnimeResponse>>> GetAllAnimes()
+    public async Task<ActionResult<List<AnimeResponse>>> GetAllAnimes(CancellationToken ct)
     {
-        return Ok(await service.GetAllAnimeAsync());
+        return Ok(await service.GetAllAnimeAsync(ct));
     }
 
     [HttpGet("{Id}")]
-    public async Task<ActionResult<AnimeResponse>> GetAnimeById(Guid Id)
+    public async Task<ActionResult<AnimeResponse>> GetAnimeById(Guid Id, CancellationToken ct)
     {
-        var result = await service.GetAnimeByIdAsync(Id);
+        var result = await service.GetAnimeByIdAsync(Id, ct);
 
         return result is null ? NotFound($"The Anime with this Id {Id} has not been found") : Ok(result);
     }
 
     [HttpGet("Page")]
-    public async Task<ActionResult<List<AnimeResponse>>> GetAnimesPaged([FromQuery] PageRequest pageRequest)
+    public async Task<ActionResult<List<AnimeResponse>>> GetAnimesPaged([FromQuery] PageRequest pageRequest, CancellationToken ct)
     {
-        return Ok(await service.GetPageAsync(pageRequest.page, pageRequest.size));
+        return Ok(await service.GetPageAsync(pageRequest.page, pageRequest.size, ct));
     }
 
     [HttpGet("Search")]
-    public async Task<ActionResult<List<AnimeResponse>>> SearchAnimes([FromQuery] SearchRequest searchRequest)
+    public async Task<ActionResult<List<AnimeResponse>>> SearchAnimes([FromQuery] SearchRequest searchRequest, CancellationToken ct)
     {
-        return Ok(await service.SearchAsync(searchRequest.quote));
+        return Ok(await service.SearchAsync(searchRequest.quote, ct));
     }
 
     [HttpPost]
-    public async Task<ActionResult<AnimeResponse>> AddAnime(AnimeCreateRequest createRequest)
+    public async Task<ActionResult<AnimeResponse>> AddAnime(AnimeCreateRequest createRequest, CancellationToken ct)
     {
-        var result = await service.AddAnimeAsync(createRequest);
+        var result = await service.AddAnimeAsync(createRequest, ct);
 
-        return CreatedAtAction(nameof(GetAllAnimes), new { Id = result.Id }, result);
+        return CreatedAtAction(nameof(GetAnimeById), new { Id = result.Id }, result);
     }
 
     [HttpPut("{Id}")]
-    public async Task<ActionResult<AnimeResponse>> UpdateAnime(Guid Id, AnimeUpdateRequest updateRequest)
+    public async Task<ActionResult<AnimeResponse>> UpdateAnime(Guid Id, AnimeUpdateRequest updateRequest, CancellationToken ct)
     {
         try
         {
-            await service.UpdateAnimeAsync(Id, updateRequest);
+            await service.UpdateAnimeAsync(Id, updateRequest, ct);
             return NoContent();
         }
         catch (KeyNotFoundException)
@@ -61,11 +61,11 @@ public class AnimeController(IAnimeService service) : ControllerBase
     }
 
     [HttpPatch("{Id}")]
-    public async Task<ActionResult<AnimeResponse>> PatchAnime(Guid Id, AnimePatchRequest patchRequest)
+    public async Task<ActionResult<AnimeResponse>> PatchAnime(Guid Id, AnimePatchRequest patchRequest, CancellationToken ct)
     {
         try
         {
-            await service.PatchAnimeAsync(Id, patchRequest);
+            await service.PatchAnimeAsync(Id, patchRequest, ct);
             return NoContent();
         }
         catch (KeyNotFoundException)
@@ -75,11 +75,11 @@ public class AnimeController(IAnimeService service) : ControllerBase
     }
     
     [HttpDelete("{Id}")]
-    public async Task<ActionResult<AnimeResponse>> DeleteAnime(Guid Id)
+    public async Task<ActionResult<AnimeResponse>> DeleteAnime(Guid Id, CancellationToken ct)
     {
         try
         {
-            await service.DeleteAnimeAsync(Id);
+            await service.DeleteAnimeAsync(Id, ct);
             return NoContent();
         }
         catch (KeyNotFoundException)
