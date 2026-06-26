@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace AllSeriesApi.DTOS.Film;
+namespace AllSeriesApi.DTOS.Base;
 
-public class FilmSearchRequest
+public class SearchRequest
 {
     [Required]
     [MinLength(2)]

@@ -35,7 +35,7 @@ public class FilmService(IGenericRepository<FilmModel> repository) : IFilmServic
         if (FilmDelete is null)
             throw new KeyNotFoundException($"Film with Id: {Id}, has not been found");
 
-        await repository.DeleteAsync(FilmDelete);
+        repository.Delete(FilmDelete);
         await repository.SaveAsync();
     }
 

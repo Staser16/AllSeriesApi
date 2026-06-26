@@ -38,7 +38,7 @@ public class SeriesService(IGenericRepository<SeriesModel> repository) : ISeries
         if (seriesDelete is null)
             throw new KeyNotFoundException($"Serieswith Id: {Id}, has not been found");
 
-        await repository.DeleteAsync(seriesDelete);
+        repository.Delete(seriesDelete);
         await repository.SaveAsync();
     }
 

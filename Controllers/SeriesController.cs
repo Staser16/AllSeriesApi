@@ -1,3 +1,4 @@
+using AllSeriesApi.DTOS.Base;
 using AllSeriesApi.DTOS.Series;
 using AllSeriesApi.Services.Series;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -25,13 +26,13 @@ public class SeriesController(ISeriesService service) : ControllerBase
     }
 
     [HttpGet("Page")]
-    public async Task<ActionResult<List<SeriesResponse>>> GetPagedSeries([FromQuery] SeriesPageRequest pageRequest)
+    public async Task<ActionResult<List<SeriesResponse>>> GetPagedSeries([FromQuery] PageRequest pageRequest)
     {
         return Ok(await service.GetPageAsync(pageRequest.page, pageRequest.size));
     }
 
     [HttpGet("Search")]
-    public async Task<ActionResult<List<SeriesResponse>>> SearchSeries([FromQuery] SeriesSearchRequest searchRequest)
+    public async Task<ActionResult<List<SeriesResponse>>> SearchSeries([FromQuery] SearchRequest searchRequest)
     {
         return Ok(await service.SearchAsync(searchRequest.quote));
     }

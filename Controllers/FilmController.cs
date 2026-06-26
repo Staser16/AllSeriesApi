@@ -1,3 +1,4 @@
+using AllSeriesApi.DTOS.Base;
 using AllSeriesApi.DTOS.Film;
 using AllSeriesApi.Servies.Film;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -25,13 +26,13 @@ public class FilmController(IFilmService service) : ControllerBase
     }
 
     [HttpGet("Page")]
-    public async Task<ActionResult<List<FilmResponse>>> GetPagedFilms([FromQuery] FilmPageRequest pageRequest)
+    public async Task<ActionResult<List<FilmResponse>>> GetPagedFilms([FromQuery] PageRequest pageRequest)
     {
         return Ok(await service.GetPageAsync(pageRequest.page, pageRequest.size));
     }
 
     [HttpGet("Search")]
-    public async Task<ActionResult<List<FilmResponse>>> SearchFilms([FromQuery] FilmSearchRequest searchRequest)
+    public async Task<ActionResult<List<FilmResponse>>> SearchFilms([FromQuery] SearchRequest searchRequest)
     {
         return Ok(await service.SearchAsync(searchRequest.quote));
     }

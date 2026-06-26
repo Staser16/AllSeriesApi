@@ -1,18 +1,10 @@
 
 using System.ComponentModel.DataAnnotations;
+using AllSeriesApi.DTOS.Base;
 namespace AllSeriesApi.DTOS.Film;
 
-public class FilmResponse
+public class FilmResponse : BaseResponse
 {
-    [Required]
-    [MinLength(1)]
-    public Guid Id { get; set; }
-    [Required]
-    [MinLength(3)]
-    public string Name { get; set; } = string.Empty;
-    [Required]
-    [Range(1, 10)]
-    public int Rating { get; set; }
     [Required]
     [Range(0, int.MaxValue)]
     public int NumberOfMovies { get; set; }

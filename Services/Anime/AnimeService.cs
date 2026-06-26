@@ -38,7 +38,7 @@ public class AnimeService(IGenericRepository<AnimeModel> repository) : IAnimeSer
         if (AnimeDelete is null)
             throw new KeyNotFoundException($"Anime with Id: {Id}, has not been found");
 
-        await repository.DeleteAsync(AnimeDelete);
+        repository.Delete(AnimeDelete);
         await repository.SaveAsync();
     }
 

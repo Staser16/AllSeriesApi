@@ -7,7 +7,7 @@ public interface IGenericRepository<TEntity> where TEntity : class
 {
     public Task<List<TEntity>> GetAllAsync();
     public Task<TEntity?> GetByIdAsync(Guid Id);
-    public Task DeleteAsync(TEntity entity);
+    public void Delete(TEntity entity);
     public Task SaveAsync();
     public Task AddAsync(TEntity entity);
     public Task<List<TEntity>> PageAsync(int page, int size);

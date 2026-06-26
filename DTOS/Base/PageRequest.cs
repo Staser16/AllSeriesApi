@@ -1,7 +1,8 @@
 using System.ComponentModel.DataAnnotations;
-namespace AllSeriesApi.DTOS.Series;
 
-public class SeriesPageRequest
+namespace AllSeriesApi.DTOS.Base;
+
+public class PageRequest
 {
     [Required]
     [Range(1, int.MaxValue)]

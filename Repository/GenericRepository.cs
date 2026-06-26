@@ -10,11 +10,11 @@ public class GenericRepository<TEntity>(SeriesDbContext context) : IGenericRepos
 {
     public async Task AddAsync(TEntity entity)
     {
-        context.Set<TEntity>()
-        .Add(entity);
+        await context.Set<TEntity>()
+        .AddAsync(entity);
     }
 
-    public async Task DeleteAsync(TEntity entity)
+    public void Delete(TEntity entity)
     {
         context.Set<TEntity>()
         .Remove(entity);

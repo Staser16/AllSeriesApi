@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using AllSeriesApi.Services.Series;
+using AllSeriesApi.DTOS.Base;
 
 namespace AllSeriesApi.Controllers;
 
@@ -26,13 +27,13 @@ public class AnimeController(IAnimeService service) : ControllerBase
     }
 
     [HttpGet("Page")]
-    public async Task<ActionResult<List<AnimeResponse>>> GetAnimesPaged([FromQuery] AnimePageRequest pageRequest)
+    public async Task<ActionResult<List<AnimeResponse>>> GetAnimesPaged([FromQuery] PageRequest pageRequest)
     {
         return Ok(await service.GetPageAsync(pageRequest.page, pageRequest.size));
     }
 
     [HttpGet("Search")]
-    public async Task<ActionResult<List<AnimeResponse>>> SearchAnimes([FromQuery] AnimeSearchRequest searchRequest)
+    public async Task<ActionResult<List<AnimeResponse>>> SearchAnimes([FromQuery] SearchRequest searchRequest)
     {
         return Ok(await service.SearchAsync(searchRequest.quote));
     }
