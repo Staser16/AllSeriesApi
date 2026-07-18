@@ -1,7 +1,7 @@
 API do zarządzania mediami takimi jak anime, seriale i filmy.
 
 #1 Technologie użyte w projekcie:
-.NET 9.0 (ASP.NET Core)
+.NET 8.0 (ASP.NET Core)
 Entity Framework Core
 MySql (Pomelo.EntityFrameworkCore.MySql)
 Scalar (API documentation tool)
@@ -9,7 +9,7 @@ Linux
 VS Code
 
 #2 Wymagania:
-.NET SDK 9.0
+.NET SDK 8.0
 Entity Cli (dotnet-ef)
 Windows/Linux
 
